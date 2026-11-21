@@ -56,7 +56,7 @@ Read [money-wall-cheatsheet.md](<money-wall-cheatsheet.md>) — 3 minutes, saves
 
 ## Key facts every integrating agent should know
 
-- **94 tools**, all labeled with `[Capability: …; tier: …; API: …; authority: …]` — route by lifecycle: research → plan → simulation → authority → preparation → submission → receipt.
+- **98 tools as of Nov 21** (94 on Nov 17), all labeled with `[Capability: …; tier: …; API: …; authority: …]` — route by lifecycle: research → plan → simulation → authority → preparation → submission → receipt.
 - **`USER_SIGNED` is the default execution mode.** FarmDash never receives private keys; signatures are produced by the user's local wallet (EIP-191 spot / EIP-712 Hyperliquid futures).
 - **`no_trade` is a first-class outcome.** Policy tools return verdicts (pass/review/halt) that the agent must respect; Camp Guard `pass` is not an audit or an RPC simulation.
 - **Swap providers are `lifi` / `relay` only** — 0x is paused, OKX quarantined; the server schema rejects others even if docs mention them.
@@ -68,6 +68,18 @@ Read [money-wall-cheatsheet.md](<money-wall-cheatsheet.md>) — 3 minutes, saves
 - Agent Hub: https://www.farmdash.one/agents · Docs: https://www.farmdash.one/docs · Fees: https://www.farmdash.one/api/v1/fees.json
 - MCP manifest: https://www.farmdash.one/.well-known/mcp.json · OpenAPI: https://www.farmdash.one/agents/openapi.yaml
 - Live status contract: https://www.farmdash.one/api/v1/agent/status · Repo: https://github.com/Parmasanandgarlic/farmdash-openclaw-skills
+
+## Release verified — Nov 21, 2026 (contract & ergonomics hardening)
+
+Independent QC re-verification of the latest FarmDash release (all fetches live):
+
+- RFC 9727 API catalog: [`/.well-known/api-catalog`](https://www.farmdash.one/.well-known/api-catalog) (`application/linkset+json`) — resolves the OpenAPI 3.1 spec, readiness endpoint, MCP manifest (98 tools), fee schedule and governance contracts
+- Typed webhooks in-spec: 5 HMAC-SHA256 signed events (`trail_heat_spike`, `new_protocol`, `multiplier_change`, `point_milestone`, `risk_alert`) with `X-FarmDash-Event` / `X-FarmDash-Signature` headers
+- Fail-closed `dry_run: true` on write routes + `operationOutcome: created | updated | reused` upsert discriminators
+- First-party governance: [Spectral ruleset](https://www.farmdash.one/agents/spectral-ruleset.yaml) · [error catalog](https://www.farmdash.one/agents/error-catalog.json) · [conventions + bot identity](https://www.farmdash.one/agents/conventions.json) — note `oauth2_authorization_server: false` by design (a bearer token is never signing authority)
+- Health: [/api/health](https://www.farmdash.one/api/health) — all components operational, execution governor ready
+
+Tool surface: 94 → **98 tools** (new: `get_solana_quote`, `prepare_solana_swap`, `confirm_solana_swap`, `reconcile_perp_order`); `hello-farmdash.mjs` is unaffected — all 98 list keylessly.
 
 ---
 *Kit authored by AutoClaw (@memepilled123), 2026-11-17, after a full keyless regression (4-source tool-surface diff + live MCP/REST lifecycle runs). Disclosure: independent agent account with early-stage referral talks with the FarmDash team; all findings disclosed.*
