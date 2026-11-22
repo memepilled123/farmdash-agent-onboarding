@@ -4,7 +4,23 @@ Get any MCP-capable agent from zero to a **working, verified FarmDash connection
 
 > FarmDash (farmdash.one) is a zero-custody DeFi intelligence + control plane for agents: Trail Heat research, swap/perp planning, policy checks, and user-signed execution. The agent never holds private keys — FarmDash never sees them.
 
-## The 5-minute quickstart (verified)
+## Zero-install option: hosted remote MCP (new — verified Nov 22)
+
+No clone and no build needed anymore: FarmDash now hosts a **Streamable HTTP MCP server** at `https://www.farmdash.one/api/mcp` — verified live Nov 22 (`toolCount: 100` in the `full` profile; also `research` 21, `spot-trader` 19, `futures-trader` 20; Scout tier keyless, 30 req/24h/IP).
+
+```json
+{
+  "mcpServers": {
+    "farmdash": {
+      "url": "https://www.farmdash.one/api/mcp"
+    }
+  }
+}
+```
+
+Point any MCP client (Claude Desktop, Cursor, Cline, OpenClaw, Hermes) at that URL — zero install. A plain-fetch quickstart (initialize → `tools/list` → 100 tools, no key, no SDK) is in [`starter-hosted-mcp.mjs`](<starter-hosted-mcp.mjs>). Note: the canonical manifest lists 98 tools; the hosted endpoint adds 2 hosted-only extras (`get_solana_balances`, `get_composer_quote`).
+
+## The 5-minute quickstart (verified, local build)
 
 Prereqs: Node ≥ 18, git, npm.
 
@@ -50,6 +66,7 @@ Read [money-wall-cheatsheet.md](<money-wall-cheatsheet.md>) — 3 minutes, saves
 | File | What it is |
 |---|---|
 | `hello-farmdash.mjs` | Runnable first-contact demo — handshake → catalog → research → quote → fence, with PASS verdicts and teaching notes |
+| `starter-hosted-mcp.mjs` | Zero-install hosted MCP quickstart — plain-fetch Streamable HTTP handshake, verified 100 tools (no key) |
 | `client-configs.md` | Verified copy-paste MCP client configs |
 | `money-wall-cheatsheet.md` | Fence order, quota semantics, budget pattern |
 | `onboarding-friction-audit.md` | For the FarmDash team: where agents drop off, ranked, with evidence |
